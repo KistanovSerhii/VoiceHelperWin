@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Settings>
+    <defaultUserNameUse>Serhii</defaultUserNameUse>
+    <!-- General commands { -->
+    <ExequteCommands>
+        <command type="ExequteAlias" fullPath="" program="C:\Program Files (x86)\Hantek6022BE\Hantek6022BE.exe" argument="">Hantek6022BE</command>
+        <command type="ExequteAlias" fullPath="" program="notepad.exe" argument="">notepad</command>
+        <command type="ExequteAlias" fullPath="C:\Users\Serhii\AppData\Local\Programs\Microsoft VS Code\" program="Code.exe" argument="">Code</command>
+        <command type="ExequteAlias" fullPath="C:\Users\Serhii\AppData\Local\Programs\Microsoft VS Code\" program="Code.exe" argument="new">CodeNew</command>
+		<command type="ExequteAlias" fullPath="C:\Program Files (x86)\AIMP\" program="AIMP.exe" argument="C:\Users\Workstation\Music\top_mp3">Music1</command>
+
+        <command type="ExplorerAlias" fullPath="" program="explorer.exe" argument="C:\Users\serhii\Documents\Visual Studio 2017\Projects">MSVSproject</command>
+        <command type="ExplorerAlias" fullPath="" program="explorer.exe" argument="C:\Users\serhii\Downloads">Downloads</command>
+        <command type="ExplorerAlias" fullPath="" program="explorer.exe" argument="C:\Users\serhii\Documents">Documents</command>
+    </ExequteCommands>
+    <!-- General commands } -->
+    <!-- Users settings { -->
+    <Users>
+        <!-- User 1 { -->
+        <User name="Serhii">
+            <RecognitionAccuracy>0.7</RecognitionAccuracy> <!-- Точность распознавания -->
+            <ExequteTypes>
+                <!-- ExequteAlias - это Команды выполнения .exe -->
+                <ExequteAlias>
+                    <Actions>
+                        <action>Выполни</action>
+                        <action>Запусти</action>
+                    </Actions>
+                    <Aliases>
+						<alias name="Music1">Музыку</alias>
+                        <alias name="Code">СтудиюКод</alias>
+                        <alias name="CodeNew">СтудиюКодНовый</alias>
+                        <alias name="notepad">Блокнот</alias>                        
+                        <alias name="Hantek6022BE">Вольтметр</alias>
+                    </Aliases>
+                </ExequteAlias>
+                <!-- ExplorerAlias - это Команды проводнику ОС -->
+                <ExplorerAlias>
+                    <Actions>
+                        <action>Открой</action>
+                        <action>Покажи</action>
+                        <action>Найди</action>
+                    </Actions>
+                    <Aliases>
+                        <alias name="MSVSproject">Проекты</alias>
+                        <alias name="Downloads">Загрузки</alias>
+                        <alias name="Documents">Документы</alias>
+                    </Aliases>
+                </ExplorerAlias>
+                <!-- ProgramSettings - это Обязательные Команды программы -->
+                <ProgramSettings>
+                    <Actions>
+                        <action aliasName="ListenTurnON">Слушай</action> <!-- Команда активации, начинает слушать и выполнять -->
+                        <action aliasName="ListenTurnOFF">Тишина</action> <!-- Прекращает слушать и выполнять пока не переведут в режим активации -->
+                        <action aliasName="killCurrentProcess">Хватит</action> <!-- Пример: Хватит Блокнот завершит запущенный блокнот -->
+                        <action aliasName="killAllProcess">ВсемХватит</action> <!-- Завершит все запущенные ранее команды -->
+                        <action aliasName="Exit">ПокаПока</action> <!-- Завершит собственную работу -->
+                        <action aliasName="SendKeys" argument=" ">Пауза</action> <!-- см. SendKeys Класс C# (в данном примере введен пробел) -->
+                    </Actions>
+                </ProgramSettings>
+            </ExequteTypes>
+        </User>
+        <!-- User 1 } -->
+    </Users>
+    <!-- Users settings } -->
+</Settings>
