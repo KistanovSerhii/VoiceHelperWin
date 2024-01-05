@@ -7,3 +7,12 @@
  ***Работает Offline - не требует интернета!***
 
 [Как использовать см. на YouTube](https://youtu.be/GhmsrFBdQQg?si=CSigJrpOBp8XNLuk)
+
+___
+
+# Добавил параметр в xml
+
+> Новый параметр <minimized>0</minimized>
+
+    <minimized>0</minimized> - запустить программу и показать пользователю окно программы
+    <minimized>1</minimized> - запустить программу и скрыть окно программы в трее
