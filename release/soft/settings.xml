@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Settings>
+    <minimized>1</minimized>
     <defaultUserNameUse>Serhii</defaultUserNameUse>
     <!-- General commands { -->
     <ExequteCommands>
