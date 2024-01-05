@@ -6,4 +6,4 @@
 
  ***Работает Offline - не требует интернета!***
 
-[Как использовать см. на YouTube]([URL](https://youtu.be/GhmsrFBdQQg?si=CSigJrpOBp8XNLuk))
+[Как использовать см. на YouTube](https://youtu.be/GhmsrFBdQQg?si=CSigJrpOBp8XNLuk)
