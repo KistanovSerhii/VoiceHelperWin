@@ -37,7 +37,14 @@ namespace Voice_helper
             listBoxShowUserMessage("Инициализация настроек программы ...");
 
             if (!loadDataSettingsXML()) return; // ошибка загрузки из settings.xml
-            
+
+            var minimizedNode = settingsXML.SelectNodes("/Settings/minimized[1]/text()");
+            string minimized = minimizedNode.Count > 0 ? settingsXML.SelectNodes("/Settings/minimized[1]/text()").Item(0).Value.ToString() : "";
+            if (minimized != "" && minimized != "0" && minimized.ToLower() != "false" && minimized.ToLower() != "ложь") 
+            {
+                this.WindowState = FormWindowState.Minimized;
+            }
+
             var defUserNode = settingsXML.SelectNodes("/Settings/defaultUserNameUse[1]/text()");
             string defUserName = defUserNode.Count > 0 ? settingsXML.SelectNodes("/Settings/defaultUserNameUse[1]/text()").Item(0).Value.ToString() : "";
             if (defUserName != "")
