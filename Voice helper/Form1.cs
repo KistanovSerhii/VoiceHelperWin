@@ -7,7 +7,8 @@ using Microsoft.Speech.Recognition;
 using Microsoft.Speech.Synthesis;
 using System.Globalization;
 using System.Xml;
-using System.Drawing;
+
+using SpeechLib;
 
 namespace Voice_helper
 {
@@ -30,6 +31,9 @@ namespace Voice_helper
         public static string commandNameListenTurnOFF;
         public static float recognitionAccuracy;
 
+        public static int selectedVoiceIndex;
+        public static int selectedVoiceRate;
+
         private void Form1_Shown(object sender, EventArgs e)
         {
             runningUserProcessesList = new List<UserInitiatedProcesses>();
@@ -38,21 +42,38 @@ namespace Voice_helper
 
             if (!loadDataSettingsXML()) return; // ошибка загрузки из settings.xml
 
-            var minimizedNode = settingsXML.SelectNodes("/Settings/minimized[1]/text()");
-            string minimized = minimizedNode.Count > 0 ? settingsXML.SelectNodes("/Settings/minimized[1]/text()").Item(0).Value.ToString() : "";
+            string minimized = GetXmlNodeValue("/Settings/minimized[1]/text()");
             if (minimized != "" && minimized != "0" && minimized.ToLower() != "false" && minimized.ToLower() != "ложь") 
             {
                 this.WindowState = FormWindowState.Minimized;
             }
 
-            var defUserNode = settingsXML.SelectNodes("/Settings/defaultUserNameUse[1]/text()");
-            string defUserName = defUserNode.Count > 0 ? settingsXML.SelectNodes("/Settings/defaultUserNameUse[1]/text()").Item(0).Value.ToString() : "";
+            ShowAvailableRussianVoices();
+
+            selectedVoiceIndex = -1;
+            string selectedVoiceName = GetXmlNodeValue("/Settings/assistantVoiceName[1]/text()");
+            if (selectedVoiceName != "") {
+                selectedVoiceIndex = FindVoiceIndex(selectedVoiceName);
+            }
+            
+            if (selectedVoiceIndex != -1) listBoxShowUserMessage($"Текущий голос помощника: {selectedVoiceName}");
+
+            selectedVoiceRate = 1;
+            string userVoiceRate = GetXmlNodeValue("/Settings/assistantVoiceRate[1]/text()");
+            if (userVoiceRate != "")
+            {
+                // Громкость Голоса от 0 до 100
+                selectedVoiceRate = int.Parse(userVoiceRate);
+                selectedVoiceRate = selectedVoiceRate > 100 ? 100 : selectedVoiceRate;
+                selectedVoiceRate = selectedVoiceRate < 0 ? 0 : selectedVoiceRate;
+            }
+            listBoxShowUserMessage($"Текущая громкость помощника: {selectedVoiceRate}");
+
+            string defUserName = GetXmlNodeValue("/Settings/defaultUserNameUse[1]/text()");
             if (defUserName != "")
             {
                 userName = defUserName;
-            }
-            else
-            {
+            } else {
                 // Реализовать возможность пользователю установить имя интерактивно { а пока прекращаем выполнение }
                 listBoxShowUserMessage("Имя пользователя по умолчанию не установлено!");
                 listBoxShowUserMessage("Заполните тег <defaultUserNameUse> в файле settings.xml и перезапустите приложение!");
@@ -62,6 +83,52 @@ namespace Voice_helper
             if (!initializationOfProgramSettingsByUser(userName)) return; // ошибка инициализации команд пользователя userName из settings.xml
 
             initializationSpeech();
+        }
+
+        static string GetXmlNodeValue(String nodePath, int itemIndex = 0)
+        {
+            var selectNode = settingsXML.SelectNodes(nodePath);
+            string nodeValue = selectNode.Count > 0 ? settingsXML.SelectNodes(nodePath).Item(itemIndex).Value.ToString() : "";
+            return nodeValue;
+        }
+
+        static void ShowAvailableRussianVoices()
+        {
+            listBoxShowUserMessage("Доступные голоса помощника:");
+            SpVoice voice = new SpVoice();
+
+            foreach (ISpeechObjectToken voiceToken in voice.GetVoices(string.Empty, string.Empty))
+            {
+                String currentVoiceName = voiceToken.GetDescription();
+
+                // Проверяем, содержит ли currentVoiceName строку "ru" (без учета регистра)
+                if (currentVoiceName.IndexOf("ru", StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    listBoxShowUserMessage($"{currentVoiceName}");
+                }
+            }
+        }
+
+        static int FindVoiceIndex(string voiceName)
+        {
+            int voiceIndex = 0;
+            SpVoice voice = new SpVoice();
+
+            foreach (ISpeechObjectToken voiceToken in voice.GetVoices(string.Empty, string.Empty))
+            {
+                String currentVoiceName = voiceToken.GetDescription();
+
+                // Сравниваем без учета регистра и пробелов
+                if (currentVoiceName.Replace(" ", "").Equals(voiceName.Replace(" ", ""), StringComparison.OrdinalIgnoreCase))
+                {
+                    return voiceIndex;
+                }
+
+                voiceIndex += 1;
+            }
+
+            // Если не найдено совпадение
+            return -1;
         }
 
         static bool initializationOfProgramSettingsByUser(string userName)
@@ -439,27 +506,43 @@ namespace Voice_helper
             lbox1.SelectedIndex = lbox1.Items.Count - 1;
         }
 
-        static void saySomeText(string sayText, bool speakAsync = true, string sender = "")
+        // В системе обязательно должен быть установлен хотябы один голос
+        // (например ivona voices Татьяна TTX)
+        // Ссылка на голоса www.microsoft.com/en-us/download/details.aspx?id=27224
+        static void saySomeText(string sayText, bool speakAsync = true, string sender = "", int rate = 1)
         {
             try
             {
-                // В системе обязательно должен быть установлен хотябы один голос
-                // (например ivona voices Татьяна TTX)
-                SpeechSynthesizer speechSynth = new SpeechSynthesizer();
+               if (selectedVoiceIndex != -1) { 
+                    SpVoice userSpeech = new SpVoice();
+                    userSpeech.Voice = userSpeech.GetVoices(string.Empty, string.Empty).Item(selectedVoiceIndex);
+                    userSpeech.Volume = 100; //Громкость Голоса 0 - 100
+                    userSpeech.Rate = rate; //Скорость голоса 0 - 9
 
-                var voiceList = speechSynth.GetInstalledVoices();
-                //speechSynth.SelectVoice(voiceList[0].VoiceInfo.Name);
-                speechSynth.SetOutputToDefaultAudioDevice();
-                speechSynth.Rate = 0;
-                speechSynth.Volume = 100;
+                    SpeechVoiceSpeakFlags speakFlag = speakAsync ? SpeechVoiceSpeakFlags.SVSFlagsAsync : SpeechVoiceSpeakFlags.SVSFDefault;
+
+                    userSpeech.Speak(sayText, speakFlag);
+                    return;
+                }
+
+                SpeechSynthesizer speech = new SpeechSynthesizer();
+                
+                var voiceList = speech.GetInstalledVoices();
+                speech.SelectVoice(voiceList[0].VoiceInfo.Name);
+
+                speech.SetOutputToDefaultAudioDevice();
+                speech.Rate = rate;
+                speech.Volume = 100;
+                
                 listBoxShowUserMessage(sender != "" ? "-" + sender + ":" + sayText : sayText);
+                
                 if (speakAsync)
                 {
-                    speechSynth.SpeakAsync(sayText);
+                    speech.SpeakAsync(sayText);
                 }
                 else
                 {
-                    speechSynth.Speak(sayText);
+                    speech.Speak(sayText);
                 }
             }
             catch (Exception ex)
@@ -467,9 +550,35 @@ namespace Voice_helper
                 listBoxShowUserMessage("Ошибка воспроизведения текста, подробно: " + ex.ToString());
             }
         }
+        private void listBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                int index = listBox1.IndexFromPoint(e.Location);
+                if (index != ListBox.NoMatches)
+                {
+                    listBox1.SelectedIndex = index;
 
-    // #Область "Приложение будет сворачиваться в трей при минимизации"
-    private void Form1_Load(object sender, EventArgs e)
+                    ContextMenu contextMenu = new ContextMenu();
+                    MenuItem copyMenuItem = new MenuItem("Копировать");
+                    copyMenuItem.Click += (copySender, copyEventArgs) =>
+                    {
+                        if (listBox1.SelectedIndex != -1)
+                        {
+                            Clipboard.SetText(listBox1.SelectedItem.ToString());
+                        }
+                    };
+
+                    contextMenu.MenuItems.Add(copyMenuItem);
+
+                    listBox1.ContextMenu = contextMenu;
+                    contextMenu.Show(listBox1, e.Location);
+                }
+            }
+        }
+
+        // #Область "Приложение будет сворачиваться в трей при минимизации"
+        private void Form1_Load(object sender, EventArgs e)
     {
         notifyIcon = new NotifyIcon
         {

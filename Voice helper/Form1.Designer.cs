@@ -41,10 +41,11 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.HorizontalScrollbar = true;
             this.listBox1.ItemHeight = 29;
-            this.listBox1.Location = new System.Drawing.Point(-1, 2);
+            this.listBox1.Location = new System.Drawing.Point(-1, -1);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(652, 236);
+            this.listBox1.Size = new System.Drawing.Size(652, 265);
             this.listBox1.TabIndex = 0;
+            this.listBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseUp);
             // 
             // Form1
             // 
