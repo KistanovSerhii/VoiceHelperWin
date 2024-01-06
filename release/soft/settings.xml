@@ -2,6 +2,8 @@
 <Settings>
     <minimized>0</minimized>
     <defaultUserNameUse>Serhii</defaultUserNameUse>
+    <assistantVoiceName>Microsoft Irina Desktop - Russian</assistantVoiceName>
+    <assistantVoiceRate>75</assistantVoiceRate>
     <!-- General commands { -->
     <ExequteCommands>
         <command type="ExequteAlias" fullPath="" program="C:\Program Files (x86)\Hantek6022BE\Hantek6022BE.exe" argument="">Hantek6022BE</command>
