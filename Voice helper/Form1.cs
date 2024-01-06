@@ -64,7 +64,7 @@ namespace Voice_helper
             {
                 // Громкость Голоса от 0 до 100
                 selectedVoiceRate = int.Parse(userVoiceRate);
-                selectedVoiceRate = selectedVoiceRate > 100 ? 100 : selectedVoiceRate;
+                selectedVoiceRate = selectedVoiceRate > 9 ? 9 : selectedVoiceRate;
                 selectedVoiceRate = selectedVoiceRate < 0 ? 0 : selectedVoiceRate;
             }
             listBoxShowUserMessage($"Текущая громкость помощника: {selectedVoiceRate}");
