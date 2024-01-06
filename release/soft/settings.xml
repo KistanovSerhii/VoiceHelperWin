@@ -3,7 +3,7 @@
     <minimized>0</minimized>
     <defaultUserNameUse>Serhii</defaultUserNameUse>
     <assistantVoiceName>Microsoft Irina Desktop - Russian</assistantVoiceName>
-    <assistantVoiceRate>75</assistantVoiceRate>
+    <assistantVoiceRate>1</assistantVoiceRate>
     <!-- General commands { -->
     <ExequteCommands>
         <command type="ExequteAlias" fullPath="" program="C:\Program Files (x86)\Hantek6022BE\Hantek6022BE.exe" argument="">Hantek6022BE</command>
@@ -21,7 +21,7 @@
     <Users>
         <!-- User 1 { -->
         <User name="Serhii">
-            <RecognitionAccuracy>0.7</RecognitionAccuracy> <!-- Точность распознавания -->
+            <RecognitionAccuracy>0.8</RecognitionAccuracy> <!-- Точность распознавания -->
             <ExequteTypes>
                 <!-- ExequteAlias - это Команды выполнения .exe -->
                 <ExequteAlias>
